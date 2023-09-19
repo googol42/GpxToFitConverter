@@ -89,6 +89,8 @@ That means you have to download the SDK and have a Java JRE installed.
 When your track has is a roundtrip with a shared started and beginning (or any other segment you plan to
 walk more than once) and you have a waypoint onto this segment, then the waypoint will only be included
 once.
+There is a workaround, but it may not be feasible for everybody: Split the track in multiple tracks,
+because then the waypoint will be added to all relevant `fit` files.
 
 # Dependencies
 

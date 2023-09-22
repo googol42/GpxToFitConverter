@@ -17,7 +17,7 @@ class Snapper(object):
                     waypoint)
                 )
             else:
-                print(f"waypoint '{waypoint.name}' is ignore. It is further way than {max_distance} m from the track '{track.name}'.")
+                print(f"waypoint '{waypoint.name}' is ignored. It is further way than {max_distance} m from the track '{track.name}'.")
         return new_waypoints
 
     @staticmethod

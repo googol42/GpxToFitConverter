@@ -3,6 +3,8 @@
 import csv
 import datetime
 import os
+import random
+import time
 import subprocess
 import tempfile
 
@@ -81,7 +83,7 @@ class Writer(object):
             "manufacturer", "1", "",
             "product", "1", "",
             "time_created", "1", "",
-            "", "", "",
+            "serial_number", "1", "",
             "", "", "",
             "", "", "",
             "", "", "",
@@ -166,8 +168,9 @@ class Writer(object):
             "type", "6", "",  # 6 = course file
             "manufacturer", "1", "",
             "garmin_product", "1001", "",
-            "", "", "",
-            "", "", "",
+            "time_created", str(int(time.time()) - 631066248 + random.randint(0, 100)), "",
+            # This is important. If this is not present, you can only load one file on your watch.
+            "serial_number", str(random.randint(100000000, 999999999)), "",
             "", "", "",
             "", "", "",
             "", "", "",

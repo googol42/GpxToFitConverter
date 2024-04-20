@@ -285,7 +285,7 @@ class Writer(object):
         position = self.to_semicircles(waypoint)
         self.rows.append([
             "Data", "4", "course_point",
-            "timestamp", f"{time_in_seconds}", "",
+            "timestamp", f"{time_in_seconds}", "s",
             "position_lat", f"{position.latitude}", "semicircles",
             "position_long", f"{position.longitude}", "semicircles",
             "distance", f"{waypoint.length_from_start}", "m",

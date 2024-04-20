@@ -51,7 +51,6 @@ class Writer(object):
 
     def convert_to_fit(self, filename, sport_type):
         self.__write_header()
-        self.__write_definitions()
         self.__write_file_id()
         self.__write_course(sport_type)
         self.__write_lap()
@@ -79,7 +78,7 @@ class Writer(object):
             "Field 11", "Value 11", "Units 11",
         ])
 
-    def __write_definitions(self):
+    def __write_file_id(self):
         self.rows.append([
             "Definition", "0", "file_id",
             "type", "1", "",
@@ -94,78 +93,6 @@ class Writer(object):
             "", "", "",
             "", "", "",
         ])
-        self.rows.append([
-            "Definition", "1", "course",
-            "name", "16", "",
-            "sport", "1", "",
-            "", "", "",
-            "", "", "",
-            "", "", "",
-            "", "", "",
-            "", "", "",
-            "", "", "",
-            "", "", "",
-            "", "", "",
-            "", "", "",
-        ])
-        self.rows.append([
-            "Definition", "2", "lap",
-            "timestamp", "1", "",
-            "start_time", "1", "",
-            "start_position_lat", "1", "",
-            "start_position_long", "1", "",
-            "end_position_lat", "1", "",
-            "end_position_long", "1", "",
-            "total_elapsed_time", "1", "",
-            "total_timer_time", "1", "",
-            "total_distance", "1", "",
-            "avg_speed", "1", "",
-            "max_speed", "1", "",
-        ])
-        self.rows.append([
-            "Definition", "3", "event",
-            "timestamp", "1", "",
-            "event", "1", "",
-            "event_type", "1", "",
-            "event_group", "1", "",
-            "", "", "",
-            "", "", "",
-            "", "", "",
-            "", "", "",
-            "", "", "",
-            "", "", "",
-            "", "", "",
-        ])
-        self.rows.append([
-            "Definition", "4", "course_point",
-            "timestamp", "1", "",
-            "position_lat", "1", "",
-            "position_long", "1", "",
-            "distance", "1", "",
-            "name", "16", "",
-            "type", "1", "",
-            "", "", "",
-            "", "", "",
-            "", "", "",
-            "", "", "",
-            "", "", "",
-        ])
-        self.rows.append([
-            "Definition", "5", "record",
-            "timestamp", "1", "",
-            "position_lat", "1", "",
-            "position_long", "1", "",
-            "distance", "1", "",
-            "altitude", "1", "",
-            "speed", "1", "",
-            "", "", "",
-            "", "", "",
-            "", "", "",
-            "", "", "",
-            "", "", "",
-        ])
-
-    def __write_file_id(self):
         self.rows.append([
             "Data", "0", "file_id",
             "type", "6", "",  # 6 = course file
@@ -183,6 +110,20 @@ class Writer(object):
         ])
 
     def __write_course(self, sport_type):
+        self.rows.append([
+            "Definition", "1", "course",
+            "name", "16", "",
+            "sport", "1", "",
+            "", "", "",
+            "", "", "",
+            "", "", "",
+            "", "", "",
+            "", "", "",
+            "", "", "",
+            "", "", "",
+            "", "", "",
+            "", "", "",
+        ])
         track_name = self.track.name[:Writer.TRACK_NAME_LENGTH]
         self.rows.append([
             "Data", "1", "course",
@@ -200,6 +141,20 @@ class Writer(object):
         ])
 
     def __write_lap(self):
+        self.rows.append([
+            "Definition", "2", "lap",
+            "timestamp", "1", "",
+            "start_time", "1", "",
+            "start_position_lat", "1", "",
+            "start_position_long", "1", "",
+            "end_position_lat", "1", "",
+            "end_position_long", "1", "",
+            "total_elapsed_time", "1", "",
+            "total_timer_time", "1", "",
+            "total_distance", "1", "",
+            "avg_speed", "1", "",
+            "max_speed", "1", "",
+        ])
         first_point = self.to_semicircles(self.track.segments[0].points[0])
         last_point = self.to_semicircles(self.track.segments[-1].points[-1])
         total_distance = round(self.track.length_2d(), ndigits=2)
@@ -219,6 +174,20 @@ class Writer(object):
         ])
 
     def __write_event(self):
+        self.rows.append([
+            "Definition", "3", "event",
+            "timestamp", "1", "",
+            "event", "1", "",
+            "event_type", "1", "",
+            "event_group", "1", "",
+            "", "", "",
+            "", "", "",
+            "", "", "",
+            "", "", "",
+            "", "", "",
+            "", "", "",
+            "", "", "",
+        ])
         self.rows.append([
             "Data", "3", "event",
             "timestamp", f"{str(self.created_at)}", "s",
@@ -251,6 +220,20 @@ class Writer(object):
         ])
 
     def __write_records(self):
+        self.rows.append([
+            "Definition", "5", "record",
+            "timestamp", "1", "",
+            "position_lat", "1", "",
+            "position_long", "1", "",
+            "distance", "1", "",
+            "altitude", "1", "",
+            "speed", "1", "",
+            "", "", "",
+            "", "", "",
+            "", "", "",
+            "", "", "",
+            "", "", "",
+        ])
         for segment in self.track.segments:
             for track_point in segment.points:
                 self.__write_record(track_point)
@@ -275,6 +258,20 @@ class Writer(object):
         self.current_point_timestamp += 1
 
     def __write_course_points(self):
+        self.rows.append([
+            "Definition", "4", "course_point",
+            "timestamp", "1", "",
+            "position_lat", "1", "",
+            "position_long", "1", "",
+            "distance", "1", "",
+            "name", "16", "",
+            "type", "1", "",
+            "", "", "",
+            "", "", "",
+            "", "", "",
+            "", "", "",
+            "", "", "",
+        ])
         for waypoint in self.waypoints:
             self.__write_course_point(waypoint)
 

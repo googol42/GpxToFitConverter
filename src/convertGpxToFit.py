@@ -26,6 +26,7 @@ def parse_args():
     parser.add_argument('--max-snap-distance', dest="max_distance", type=int, default=100, help="When waypoints are snapped to the track, "
                                                                                                 "filter out any waypoint further away than "
                                                                                                 "given (default: 100), in meters.")
+    parser.add_argument('--speed', type=str, default="3.5", help="Set the expected speed for the course (default 3.5 m/s")
     parser.add_argument('--sport-type', type=str, default=HIKING_SPORT_TYPE, help="Set the sport of the course. "
                                                                                   "Default: 17 which stands for hiking. "
                                                                                   "Can be set to any empty string.")
@@ -56,7 +57,7 @@ def main():
             if args.snap_waypoints:
                 waypoints_for_track = Snapper().snap_points_to_track(track, list(gpx_object.waypoints), args.max_distance)
 
-        Writer(track, waypoints_for_track, args.max_distance).convert_to_fit(output_file_name, args.sport_type)
+        Writer(track, waypoints_for_track, args.max_distance, args.speed).convert_to_fit(output_file_name, args.sport_type)
 
 
 if __name__ == '__main__':

@@ -18,9 +18,10 @@ class Writer(object):
     TRACK_NAME_LENGTH = 23
     COURSE_POINT_NAME_LENGTH = 14
 
-    def __init__(self, track, waypoints_for_track, max_distance):
+    def __init__(self, track, waypoints_for_track, max_distance, speed):
         self.track = track
         self.rows = []
+        self.speed = speed
 
         self.__calculate_length_for_track_points()
         self.waypoints = self.__calculate_length_from_start_to_way_points(waypoints_for_track, max_distance)
@@ -261,9 +262,9 @@ class Writer(object):
             "position_long", f"{position.longitude}", "semicircles",
             "distance", f"{track_point.length_from_start}", "m",
             "altitude", f"{elevation}", "m",
-            "speed", "", "m/s",
+            "speed", self.speed, "m/s",
             "enhanced_altitude", f"{elevation}", "m",
-            "enhanced_speed", "", "m/s",
+            "enhanced_speed", self.speed, "m/s",
             "", "", "",
             "", "", "",
             "", "", "",

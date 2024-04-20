@@ -59,8 +59,8 @@ class Writer(object):
         self.__write_course_points()
         self.__write_event_end()
 
-        temp_file = self.__write_csv()
-        self.__convert_csv_to_fit(temp_file, filename)
+        self.__write_csv(filename)
+        self.__convert_csv_to_fit(filename)
 
     def __write_header(self):
         self.rows.append([
@@ -308,24 +308,22 @@ class Writer(object):
             return waypoint_type
         return COURSE_POINTS['generic']
 
-    def __write_csv(self):
-        temp_file = tempfile.mkstemp(suffix=".csv")[1]
-        with open(temp_file, 'w', newline='') as csvfile:
+    def __write_csv(self, filename):
+        with open(f"{filename}.csv", 'w', newline='') as csvfile:
             writer = csv.writer(csvfile, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
             for row in self.rows:
                 writer.writerow(row)
-        return temp_file
 
     @staticmethod
-    def __convert_csv_to_fit(temp_file, filename):
+    def __convert_csv_to_fit(filename):
         dir_path = os.path.dirname(os.path.realpath(__file__))
         subprocess.call([
             "java",
             "-jar",
             f"{dir_path}/../SDK/java/FitCSVTool.jar",
             "-c",
-            temp_file,
-            filename
+            f"{filename}.csv",
+            f"{filename}.fit"
         ])
 
     @staticmethod

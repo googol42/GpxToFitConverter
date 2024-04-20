@@ -37,8 +37,8 @@ def parse_args():
 def output_name(input_file, number_of_tracks, track):
     input_file = os.path.splitext(input_file)[0]
     if number_of_tracks == 1:
-        return f"{input_file}.fit"
-    return f"{input_file} - {track.name}.fit"
+        return input_file
+    return f"{input_file} - {track.name}"
 
 
 def main():

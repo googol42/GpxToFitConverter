@@ -25,6 +25,8 @@ class Writer(object):
 
         self.__calculate_length_for_track_points()
         self.waypoints = self.__calculate_length_from_start_to_way_points(waypoints_for_track, max_distance)
+        self.created_at = int(time.time()) - 631066248 + random.randint(0, 100)
+        self.current_point_timestamp = self.created_at
 
     def __calculate_length_for_track_points(self):
         previous_point = None
@@ -169,7 +171,7 @@ class Writer(object):
             "type", "6", "",  # 6 = course file
             "manufacturer", "1", "",
             "garmin_product", "1001", "",
-            "time_created", str(int(time.time()) - 631066248 + random.randint(0, 100)), "",
+            "time_created", str(self.created_at), "",
             # This is important. If this is not present, you can only load one file on your watch.
             "serial_number", str(random.randint(100000000, 999999999)), "",
             "", "", "",
@@ -203,6 +205,8 @@ class Writer(object):
         total_distance = round(self.track.length_2d(), ndigits=2)
         self.rows.append([
             "Data", "2", "lap",
+            "timestamp", f"{str(self.created_at)}", "s",
+            "start_time", f"{str(self.created_at)}", "",
             "start_position_lat", f"{first_point.latitude}", "semicircles",
             "start_position_long", f"{first_point.longitude}", "semicircles",
             "end_position_lat", f"{last_point.latitude}", "semicircles",
@@ -212,17 +216,15 @@ class Writer(object):
             "total_distance", f"{total_distance}", "m",
             "avg_speed", "", "m / s",
             "max_speed", "", "m / s",
-            "enhanced_avg_speed", "", "m / s",
-            "enhanced_max_speed", "", "m / s",
         ])
 
     def __write_event(self):
         self.rows.append([
             "Data", "3", "event",
+            "timestamp", f"{str(self.created_at)}", "s",
             "event", "0", "",
             "event_type", "0", "",
             "event_group", "0", "",
-            "", "", "",
             "", "", "",
             "", "", "",
             "", "", "",
@@ -235,10 +237,10 @@ class Writer(object):
     def __write_event_end(self):
         self.rows.append([
             "Data", "3", "event",
+            "timestamp", f"{str(self.current_point_timestamp)}", "s",
             "event", "0", "",
             "event_type", "9", "",
             "event_group", "0", "",
-            "", "", "",
             "", "", "",
             "", "", "",
             "", "", "",
@@ -258,18 +260,19 @@ class Writer(object):
         elevation = position.elevation if position.elevation else ''
         self.rows.append([
             "Data", "5", "record",
+            "timestamp", f"{str(self.current_point_timestamp)}", "s",
             "position_lat", f"{position.latitude}", "semicircles",
             "position_long", f"{position.longitude}", "semicircles",
             "distance", f"{track_point.length_from_start}", "m",
             "altitude", f"{elevation}", "m",
             "speed", self.speed, "m/s",
-            "enhanced_altitude", f"{elevation}", "m",
-            "enhanced_speed", self.speed, "m/s",
+            "", "", "",
             "", "", "",
             "", "", "",
             "", "", "",
             "", "", "",
         ])
+        self.current_point_timestamp += 1
 
     def __write_course_points(self):
         for waypoint in self.waypoints:

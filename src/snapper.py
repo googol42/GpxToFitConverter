@@ -9,7 +9,7 @@ class Snapper(object):
         new_waypoints = []
         for waypoint in waypoints_for_track:
             nearest_location = track.get_nearest_location(waypoint).location
-            if nearest_location.distance_3d(waypoint) <= max_distance:
+            if nearest_location.distance_2d(waypoint) <= max_distance:
                 new_waypoints.append(self.__copy_waypoint_with_new_coordinates(
                     nearest_location.latitude,
                     nearest_location.longitude,

@@ -6,7 +6,7 @@ import os
 import random
 import time
 import subprocess
-import tempfile
+import srtm
 
 from gpxpy.geo import Location
 
@@ -22,6 +22,8 @@ class Writer(object):
         self.track = track
         self.rows = []
         self.speed = speed
+
+        self.elevation_data = srtm.get_data()
 
         self.__calculate_length_for_track_points()
         self.waypoints = self.__calculate_length_from_start_to_way_points(waypoints_for_track, max_distance)
@@ -240,7 +242,11 @@ class Writer(object):
 
     def __write_record(self, track_point):
         position = self.to_semicircles(track_point)
-        elevation = position.elevation if position.elevation else ''
+        if position.elevation:
+            elevation = position.elevation
+        else:
+            elevation = self.elevation_data.get_elevation(track_point.latitude, track_point.longitude)
+
         self.rows.append([
             "Data", "5", "record",
             "timestamp", f"{str(self.current_point_timestamp)}", "s",

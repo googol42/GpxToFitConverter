@@ -34,11 +34,10 @@ def parse_args():
     return parser.parse_args()
 
 
-def output_name(input_file, number_of_tracks, track):
-    input_file = os.path.splitext(input_file)[0]
-    if number_of_tracks == 1:
-        return input_file
-    return f"{input_file} - {track.name}"
+def check_for_unique_names(gpx_object):
+    names = list(map(lambda track: track.name[:15], gpx_object.tracks))
+    if len(names) != len(set(names)):
+        raise Exception("Each track has to have a unique name (only the first 15 characters are checked).")
 
 
 def main():
@@ -47,17 +46,14 @@ def main():
     with open(args.input) as input_file:
         gpx_object = gpxpy.parse(input_file)
 
-    number_of_tracks = len(gpx_object.tracks)
+    check_for_unique_names(gpx_object)
     for track in gpx_object.tracks:
-        output_file_name = output_name(args.input, number_of_tracks, track)
-
         waypoints_for_track = []
         if args.include_waypoints:
             waypoints_for_track = list(gpx_object.waypoints)
             if args.snap_waypoints:
                 waypoints_for_track = Snapper().snap_points_to_track(track, list(gpx_object.waypoints), args.max_distance)
-
-        Writer(track, waypoints_for_track, args.max_distance, args.speed).convert_to_fit(output_file_name, args.sport_type)
+        Writer(track, waypoints_for_track, args.max_distance, args.speed).convert_to_fit(track.name, args.sport_type)
 
 
 if __name__ == '__main__':
